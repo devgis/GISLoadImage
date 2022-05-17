@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no"/>
+<title>Geodesic Buffers</title>
+<link rel="stylesheet" href="http://192.168.0.106:6088/3.16/dijit/themes/claro/claro.css">
+<link rel="stylesheet" href="http://192.168.0.106:6088/3.16/esri/css/esri.css">
+<style>
+  html, body, #map { height: 100%; width: 100%; margin: 0; padding: 0; }
+
+  h3 { margin: 0 0 5px 0; border-bottom: 1px solid #444; }
+  .shadow {
+    -moz-box-shadow: 0 0 5px #888;
+    -webkit-box-shadow: 0 0 5px #888;
+    box-shadow: 0 0 5px #888;
+  }
+  #feedback {
+    background: #fff;
+    bottom: 30px;
+    color: #444;
+    position: absolute;
+    font-family: arial;
+    height: 140px;
+    left: 30px;
+    margin: 5px;
+    padding: 10px;
+    width: 300px;
+    z-index: 40;
+  }
+  #note { font-size: 80%; font-weight: 700; padding: 0 0 10px 0; }
+</style>
+
+<script src="http://192.168.0.106:6088/3.16/init.js"></script>
+<script>
+  dojo.require("esri.map");
+  dojo.require("esri.layers.MapImageLayer");
+
+  var map;
+  function init() {
+    var initExtent = new esri.geometry.Extent({"xmin":-9005991,"ymin":3866418,"xmax":-8620442,"ymax":4022043});
+    map = new esri.Map("map",
+    {
+        extent:initExtent,slider: true,
+        sliderPosition: "bottom-right", //bottom-left //top-right
+        sliderStyle: "small", //large small
+        extent: initExtent
+        //logo: false
+        });
+    //var basemap = new esri.layers.ArcGISTiledMapServiceLayer("http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer");
+    //map.addLayer(basemap);
+
+    // create and add the layer
+    var mil = new esri.layers.MapImageLayer({
+      'id': 'usgs_screen_overlay'
+    });
+    map.addLayer(mil);
+
+    // create an add the actual image
+    var mi = new esri.layers.MapImage({
+      'extent': { 'xmin': -8864908, 'ymin': 3885443, 'xmax': -8762763, 'ymax': 3976997},
+      'href': 'http://liyafei-workpc:8080/map.jpg'
+    });
+    mil.addImage(mi);
+
+    dojo.connect(map, 'onLoad', function() { 
+      dojo.connect(dijit.byId('map'), 'resize', map, map.resize);
+    });
+  }
+  dojo.ready(init);
+
+    
+</script>
+</head>
+
+<body>
+  <div id="map">
+  </div>
+</body>
+</html>
